@@ -19,13 +19,13 @@
 - name: Register Linuxbrew zsh in /etc/shells (Ubuntu)
   ansible.builtin.lineinfile:
     path: /etc/shells
-    line: "{{ lookup('pipe', 'brew --prefix') }}/bin/zsh"
+    line: "{{ mac_dev_playbook_brew_prefix }}/bin/zsh"
     state: present
   become: true
   when: ansible_facts['os_family'] == 'Debian'
 
 - name: Set zsh as default shell (Ubuntu)
-  ansible.builtin.command: "chsh -s {{ lookup('pipe', 'brew --prefix') }}/bin/zsh {{ ansible_facts.env.USER }}"
+  ansible.builtin.command: "chsh -s {{ mac_dev_playbook_brew_prefix }}/bin/zsh {{ ansible_facts.env.USER }}"
   become: true
   changed_when: false
   when: ansible_facts['os_family'] == 'Debian'

@@ -1,5 +1,5 @@
 ---
 - name: Install mise-managed tools
-  ansible.builtin.command: "{{ lookup('pipe', 'brew --prefix mise') }}/bin/mise install"
+  ansible.builtin.command: "{{ mac_dev_playbook_brew_prefix }}/bin/mise install"
   register: mac_dev_playbook_mise_install
   changed_when: "'installed' in mac_dev_playbook_mise_install.stdout"

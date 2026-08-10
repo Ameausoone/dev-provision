@@ -2,5 +2,5 @@
   ansible.builtin.command: gh extension install {{ item }}
   loop: "{{ mac_dev_playbook_gh_cli_extensions }}"
   args:
-    creates: "{{ ansible_facts.env.HOME }}/.config/gh/extensions/{{ item }}"
+    creates: "{{ ansible_facts.env.HOME }}/.local/share/gh/extensions/gh-{{ item.split('/')[-1] | regex_replace('^gh-', '') }}"
   when: mac_dev_playbook_gh_cli_extensions is defined

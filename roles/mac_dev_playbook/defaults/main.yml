@@ -56,6 +56,8 @@ mac_dev_playbook_homebrew_installed_packages_common:
   - pygments                # Pygments is a generic syntax highlighter
   - ripgrep                 # ripgrep (rg) is a fast recursive grep replacement
   - rust                    # Rust is a systems programming language
+  - tldr 
+  - tmux                    # tmux is a terminal multiplexer
   - tree                    # tree is a directory listing utility
   - hashicorp/tap/terraform-ls # terraform-ls is a terraform plugin for vscode
   - watch                   # watch is a command that runs a program periodically, showing output fullscreen

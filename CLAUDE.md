@@ -55,6 +55,7 @@ mise run compare-dotfiles
 - `roles/mac_dev_playbook/defaults/main.yml` — all package lists (Homebrew taps, common vs `*_darwin_only` packages, apt packages/repos, flatpak packages, npm packages, gh CLI extensions)
 - `roles/mac_dev_playbook/files/HOME/` — dotfiles copied recursively to `$HOME` on each playbook run
 - `roles/mac_dev_playbook/files/HOME/.zshrc.d/` — zsh config fragments, sourced alphabetically by `~/.zshrc`; several fragments branch on `uname` to skip macOS-only setup (coreutils PATH shim, IntelliJ launcher, oh-my-zsh `iterm2`/`macos` plugins)
+- `roles/mac_dev_playbook/files/HOME/.docs/` — per-tool cheat sheets (`<tool>-cheat-sheet.md`), deployed to `~/.docs/`
 - `roles/mac_dev_playbook/files/dotfiles/ghostty/` — OS-specific Ghostty configs (`config.darwin`, `config.linux`), placed by `dotfiles.yml` at the right XDG/macOS path
 - `roles/mac_dev_playbook/files/HOME/.gitconfig` — includes `~/.gitconfig.local` (untracked, machine-local overrides only — never repo-managed), `~/.gitconfig.os` (OS-specific, see `dotfiles/gitconfig-os/`), and `~/.gitconfig.priv` (content-free hook for the private companion repo to attach to — see its own CLAUDE.md)
 - `scripts/compare-dotfiles.sh` — diffs provisioned files against the live `$HOME`
@@ -75,6 +76,8 @@ mise run compare-dotfiles
   over the legacy `hkp://` protocol (unreliable/often filtered). Get the fingerprint once from a
   failed `apt_repository` attempt's error output, or from the PPA's Launchpad page.
 - Dotfiles go under `roles/mac_dev_playbook/files/HOME/` mirroring the `$HOME` structure
+- New cheat sheets go under `.docs/` as `<tool>-cheat-sheet.md`, terse `## Section` + fenced code
+  block style (see `git-cheat-sheet.md`)
 - zsh scripts in `.zshrc.d/` are loaded alphabetically — use numeric prefixes (`00_`, `01_`) to control order
 - Ansible collections required: `community.general`, `ansible.posix` (install via `ansible-galaxy collection install -r requirements.yml`)
 - On Ubuntu, run with `--ask-become-pass` — the apt/flatpak/chsh tasks need sudo. Every privileged

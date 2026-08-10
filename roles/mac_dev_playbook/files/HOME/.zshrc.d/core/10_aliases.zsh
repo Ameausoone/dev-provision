@@ -14,6 +14,7 @@ function mkcd() { mkdir -p "$@" && cd "$_"; }
 
 alias cd..="cd .."
 alias ..="cd .."
+alias ls="ls -a"
 
 # ==============================================================================
 # Git Workflow

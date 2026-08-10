@@ -14,4 +14,3 @@
   community.general.homebrew:
     name: "{{ mac_dev_playbook_homebrew_installed_packages }}"
     state: present
-    upgrade_all: true

@@ -1,4 +1,8 @@
 ---
+- name: Determine Homebrew prefix
+  ansible.builtin.set_fact:
+    mac_dev_playbook_brew_prefix: "{{ lookup('pipe', 'brew --prefix') }}"
+
 - name: Set up oh-my-zsh
   ansible.builtin.import_tasks: oh-my-zsh.yml
 

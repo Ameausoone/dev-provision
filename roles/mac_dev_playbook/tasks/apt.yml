@@ -19,11 +19,15 @@
   loop_control:
     label: "{{ item.name }}"
 
+- name: Update apt cache
+  ansible.builtin.apt:
+    update_cache: true
+  become: true
+
 - name: Install apt-repo-backed packages
   ansible.builtin.apt:
     name: "{{ item.name }}"
     state: present
-    update_cache: true
   become: true
   loop: "{{ mac_dev_playbook_apt_repo_packages }}"
   loop_control:
@@ -35,18 +39,27 @@
     state: directory
     mode: "0755"
 
+- name: Check for existing Nerd Font
+  ansible.builtin.find:
+    paths: "{{ ansible_facts.env.HOME }}/.local/share/fonts"
+    patterns: "{{ mac_dev_playbook_nerd_font_name }}*"
+  register: mac_dev_playbook_nerd_font_installed
+
 - name: Download Nerd Font archive
   ansible.builtin.get_url:
     url: "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/{{ mac_dev_playbook_nerd_font_name }}.zip"
     dest: "/tmp/{{ mac_dev_playbook_nerd_font_name }}-nerd-font.zip"
     mode: "0644"
+  when: mac_dev_playbook_nerd_font_installed.matched == 0
 
 - name: Unpack Nerd Font archive into local fonts directory
   ansible.builtin.unarchive:
     src: "/tmp/{{ mac_dev_playbook_nerd_font_name }}-nerd-font.zip"
     dest: "{{ ansible_facts.env.HOME }}/.local/share/fonts"
     remote_src: true
+  when: mac_dev_playbook_nerd_font_installed.matched == 0
 
 - name: Refresh font cache
   ansible.builtin.command: fc-cache -f "{{ ansible_facts.env.HOME }}/.local/share/fonts"
   changed_when: true
+  when: mac_dev_playbook_nerd_font_installed.matched == 0

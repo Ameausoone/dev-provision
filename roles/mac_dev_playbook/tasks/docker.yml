@@ -10,9 +10,17 @@
 
 - name: Symlink Docker CLI plugins from Homebrew
   ansible.builtin.file:
-    src: "{{ lookup('pipe', 'brew --prefix ' + item) }}/bin/{{ item }}"
+    src: "{{ mac_dev_playbook_brew_prefix }}/bin/{{ item }}"
     dest: "{{ ansible_facts.env.HOME }}/.docker/cli-plugins/{{ item }}"
     state: link
   with_items:
     - docker-buildx
     - docker-compose
+
+- name: Link Rancher Desktop Docker socket to /var/run/docker.sock
+  ansible.builtin.file:
+    src: "{{ ansible_facts.env.HOME }}/.rd/docker.sock"
+    dest: /var/run/docker.sock
+    state: link
+    force: true
+  become: true
