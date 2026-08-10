@@ -44,6 +44,7 @@
     paths: "{{ ansible_facts.env.HOME }}/.local/share/fonts"
     patterns: "{{ mac_dev_playbook_nerd_font_name }}*"
   register: mac_dev_playbook_nerd_font_installed
+  no_log: true
 
 - name: Download Nerd Font archive
   ansible.builtin.get_url:

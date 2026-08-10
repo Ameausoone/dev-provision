@@ -12,8 +12,10 @@ Flatpak (Flathub) apps for the GUI tools that only exist as macOS casks.
 ## Running the playbook
 
 ```bash
-ansible-playbook main.yml --diff --verbose --inventory ~/.inventory --limit $(hostname)
+ansible-playbook main.yml --diff --verbose --limit $(hostname)
 ```
+
+Inventory is set via `~/.ansible.cfg` (`inventory = ~/.ansible/inventory`), no need to pass `--inventory`.
 
 Run only brew tasks:
 
