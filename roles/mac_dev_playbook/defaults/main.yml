@@ -3,6 +3,7 @@
 mac_dev_playbook_homebrew_taps:
   - wagoodman/dive
   - hashicorp/tap
+  - shaharia-lab/tap
 
 mac_dev_playbook_homebrew_absent_packages:
   - asdf
@@ -57,12 +58,14 @@ mac_dev_playbook_homebrew_installed_packages_common:
   - pygments                # Pygments is a generic syntax highlighter
   - ripgrep                 # ripgrep (rg) is a fast recursive grep replacement
   - rust                    # Rust is a systems programming language
-  - tldr 
+  - shaharia-lab/tap/slackcli # slackcli is a command-line interface for Slack
+  - tldr
   - tmux                    # tmux is a terminal multiplexer
   - tree                    # tree is a directory listing utility
   - hashicorp/tap/terraform-ls # terraform-ls is a terraform plugin for vscode
   - watch                   # watch is a command that runs a program periodically, showing output fullscreen
   - wget                    # wget is a command line downloader
+  - ykman                   # ykman is the YubiKey Manager CLI
   - yq                      # yq is a lightweight and flexible command-line YAML/JSON/XML processor
   - zsh                     # zsh is a shell interpreter for interactive programs and scripts
   - zsh-autosuggestions     # fish-like autosuggestions for zsh (replaces antigen bundle)
@@ -81,6 +84,7 @@ mac_dev_playbook_homebrew_installed_packages_darwin_only:
   - keystore-explorer       # Keystore Explorer is a tool for managing Java keystores (installed via Flatpak on Ubuntu)
   - intellij-idea           # IntelliJ IDEA is a Java IDE (installed via Flatpak on Ubuntu)
   - visual-studio-code      # Visual Studio Code is a code editor (installed via apt on Ubuntu)
+  - aws-vpn-client          # AWS Client VPN (installed via apt repo on Ubuntu)
 
 mac_dev_playbook_homebrew_installed_packages: >-
   {{ mac_dev_playbook_homebrew_installed_packages_common
@@ -95,6 +99,7 @@ mac_dev_playbook_apt_packages:
   - gnome-tweaks            # GNOME desktop customization
   - gnome-shell-extension-manager # install/manage GNOME Shell extensions
   - seahorse                # GNOME keyring manager GUI, not installed by default on Ubuntu 26
+  - opensc-pkcs11           # PKCS#11 module for smart cards/YubiKey PIV
 
 # Nerd Font installed on Ubuntu so Starship's icons/symbols render in Ghostty
 # (macOS installs are expected to already have one from a previous cask/manual setup).
@@ -138,6 +143,17 @@ mac_dev_playbook_apt_repo_packages:
     components:
       - main
     signed_by: https://acli.atlassian.com/gpg/public-key.asc
+  - name: awsvpnclient
+    description: "AWS Client VPN"
+    # Official install instructions (CloudFront-hosted, no vanity AWS domain):
+    # https://docs.aws.amazon.com/vpn/latest/clientvpn-user/client-vpn-connect-linux-install.html
+    uris: https://d20adtppz83p9s.cloudfront.net/GTK/latest/debian-repo
+    suites: ubuntu
+    components:
+      - main
+    architectures:
+      - amd64
+    signed_by: https://d20adtppz83p9s.cloudfront.net/GTK/latest/debian-repo/awsvpnclient_public_key.asc
 
 # Flatpak (Flathub) installs, only on Ubuntu/Debian. IntelliJ IDEA is an
 # unofficial community package on Flathub (not published by JetBrains).
