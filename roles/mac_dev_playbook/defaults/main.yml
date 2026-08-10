@@ -65,7 +65,6 @@ mac_dev_playbook_homebrew_installed_packages_common:
   - hashicorp/tap/terraform-ls # terraform-ls is a terraform plugin for vscode
   - watch                   # watch is a command that runs a program periodically, showing output fullscreen
   - wget                    # wget is a command line downloader
-  - ykman                   # ykman is the YubiKey Manager CLI
   - yq                      # yq is a lightweight and flexible command-line YAML/JSON/XML processor
   - zsh                     # zsh is a shell interpreter for interactive programs and scripts
   - zsh-autosuggestions     # fish-like autosuggestions for zsh (replaces antigen bundle)
@@ -99,7 +98,6 @@ mac_dev_playbook_apt_packages:
   - gnome-tweaks            # GNOME desktop customization
   - gnome-shell-extension-manager # install/manage GNOME Shell extensions
   - seahorse                # GNOME keyring manager GUI, not installed by default on Ubuntu 26
-  - opensc-pkcs11           # PKCS#11 module for smart cards/YubiKey PIV
 
 # Nerd Font installed on Ubuntu so Starship's icons/symbols render in Ghostty
 # (macOS installs are expected to already have one from a previous cask/manual setup).
