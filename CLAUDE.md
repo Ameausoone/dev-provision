@@ -79,6 +79,13 @@ mise run compare-dotfiles
 - New cheat sheets go under `.docs/` as `<tool>-cheat-sheet.md`, terse `## Section` + fenced code
   block style (see `git-cheat-sheet.md`)
 - zsh scripts in `.zshrc.d/` are loaded alphabetically — use numeric prefixes (`00_`, `01_`) to control order
+- When adding a new CLI tool, check whether it needs shell completion configured. Homebrew-installed
+  tools that ship a static `_<tool>` file (gh, git, mise, starship, copilot, k9s, atuin, ...)
+  are picked up automatically via the `fpath` set in `00_zsh-plugins.zsh` — no extra work needed.
+  Tools installed another way (mise, apt, apt-repo, manual binary) or whose formula doesn't ship a
+  static completion (e.g. awscli) need their own `.zshrc.d/core/50_<tool>.zsh` fragment, typically
+  `source <(<tool> completion zsh)` (see `50_kubectl.zsh`, `50_acli.zsh`) — check the tool's own docs
+  for the exact subcommand/flag first.
 - Ansible collections required: `community.general`, `ansible.posix` (install via `ansible-galaxy collection install -r requirements.yml`)
 - On Ubuntu, run with `--ask-become-pass` — the apt/flatpak/chsh tasks need sudo. Every privileged
   Ubuntu task must have `become: true` explicitly — one that's missing it hits its own separate auth

@@ -55,6 +55,25 @@
   tags:
     - dotfiles
 
+- name: Find zsh config fragments
+  ansible.builtin.find:
+    paths: "{{ ansible_facts.env.HOME }}/.zshrc.d"
+    patterns: "*.zsh"
+    recurse: true
+  register: mac_dev_playbook_zsh_fragments
+  tags:
+    - dotfiles
+
+- name: Ensure zsh config fragments are executable
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    mode: "0755"
+  loop: "{{ mac_dev_playbook_zsh_fragments.files }}"
+  loop_control:
+    label: "{{ item.path }}"
+  tags:
+    - dotfiles
+
 - name: Copy Ghostty config (macOS)
   ansible.builtin.copy:
     src: dotfiles/ghostty/config.darwin

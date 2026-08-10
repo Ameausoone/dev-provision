@@ -3,7 +3,6 @@
 mac_dev_playbook_homebrew_taps:
   - wagoodman/dive
   - hashicorp/tap
-  - ankitpokhrel/jira-cli
 
 mac_dev_playbook_homebrew_absent_packages:
   - asdf
@@ -14,12 +13,14 @@ mac_dev_playbook_homebrew_absent_packages:
   - krew
   - antigen                 # replaced by brew zsh-* plugins + oh-my-zsh
   - pre-commit              # pre-commit is a git pre-commit hook framework, install it from mise instead
+  - jira-cli                # replaced by acli (Atlassian's own CLI)
 
 # Formulae installed on every OS (macOS + Ubuntu via Linuxbrew).
 mac_dev_playbook_homebrew_installed_packages_common:
   # - ansible # Installed via Pip.
   - adr-tools                # adr-tools is a command line tool for working with Architecture Decision Records
   - agg                     # Asciicast to GIF converter
+  - argocd                  # argocd is the CLI for Argo CD (GitOps CD for Kubernetes)
   - atuin                   # atuin is a modern history command
   - awscli                  # awscli is a command-line interface for AWS
   - bash                    # bash is a shell
@@ -37,9 +38,9 @@ mac_dev_playbook_homebrew_installed_packages_common:
   - git                     # Git is a version control system
   - git-lfs                 # Git LFS is a Git extension for versioning large files
   - gh            # GitHub CLI
+  - glab                    # GitLab CLI
   - highlight               # Syntax highlighting for your terminal
   - hashicorp/tap/vault     # Vault is a tool for managing secrets
-  - jira-cli                # jira-cli is a command line interface for Jira
   - jq                      # jq is a lightweight and flexible command-line JSON processor
   - k9s                     # k9s is a Kubernetes CLI
   - lazygit                 # lazygit is a terminal UI for git commands
@@ -130,6 +131,13 @@ mac_dev_playbook_apt_repo_packages:
     # often filtered/unreliable) -- same fingerprint, resolved via Launchpad's
     # own API, just fetched over a transport that actually works.
     signed_by: "https://keyserver.ubuntu.com/pks/lookup?op=get&options=mr&search=0x0721FDF5FECB88DC6920361657C8EF455CEAE491"
+  - name: acli
+    description: "Atlassian CLI"
+    uris: https://acli.atlassian.com/linux/deb
+    suites: stable
+    components:
+      - main
+    signed_by: https://acli.atlassian.com/gpg/public-key.asc
 
 # Flatpak (Flathub) installs, only on Ubuntu/Debian. IntelliJ IDEA is an
 # unofficial community package on Flathub (not published by JetBrains).
