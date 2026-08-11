@@ -156,6 +156,7 @@ mac_dev_playbook_apt_repo_packages:
 # Flatpak (Flathub) installs, only on Ubuntu/Debian. IntelliJ IDEA is an
 # unofficial community package on Flathub (not published by JetBrains).
 mac_dev_playbook_flatpak_packages:
+  - com.google.Chrome
   - com.jetbrains.IntelliJ-IDEA-Ultimate
   - org.keystore_explorer.KeyStoreExplorer
 
