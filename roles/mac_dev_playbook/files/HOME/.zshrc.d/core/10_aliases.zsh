@@ -27,14 +27,14 @@ function lazy-git() {
   fi
 
   git add . && \
-  (git commit -a -m "$1" || (git add . && git commit -a -m "$1")) && \
-  git push
+  (git commit -q -a -m "$1" || (git add . && git commit -q -a -m "$1")) && \
+  git push -q
 }
 
 # Shared helper: generate a conventional commit message from the currently
 # staged diff (cwd must already be inside the target repo, changes staged).
 function _dp_commit_msg() {
-  git diff --cached | copilot --model 'claude-haiku-4.5' --prompt \
+  git diff --cached | copilot --silent --model 'claude-haiku-4.5' --prompt \
     "Output exactly one conventional commit message for this staged diff.
 Format: <type>(<scope>): <description>
 Allowed types: feat, fix, chore, refactor, docs, style, test, ci.
