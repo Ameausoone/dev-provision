@@ -57,7 +57,7 @@
 
 - name: Find zsh config fragments
   ansible.builtin.find:
-    paths: "{{ ansible_facts.env.HOME }}/.zshrc.d"
+    paths: "{{ ansible_facts.env.HOME }}/.zshrc.d/core"
     patterns: "*.zsh"
     recurse: true
   register: mac_dev_playbook_zsh_fragments
@@ -129,13 +129,13 @@
     - dotfiles
 
 # Populates ~/.ssh/allowed_signers for `git log --show-signature` / SSH commit
-# signing verification. Soft-fails on a fresh machine where user.email or the
+# signing verification. Skipped on a fresh machine where user.email or the
 # SSH key aren't set up yet -- re-run the playbook once they are.
 - name: Get git commit email
-  ansible.builtin.command: git config --global user.email
+  community.general.git_config_info:
+    name: user.email
+    scope: global
   register: mac_dev_playbook_git_email
-  changed_when: false
-  failed_when: false
   tags:
     - dotfiles
 
@@ -149,12 +149,11 @@
 
 - name: Populate allowed_signers for SSH commit signature verification
   ansible.builtin.copy:
-    content: "{{ mac_dev_playbook_git_email.stdout }} {{ (mac_dev_playbook_ssh_pubkey.content | b64decode).strip() }}\n"
+    content: "{{ mac_dev_playbook_git_email.config_value }} {{ (mac_dev_playbook_ssh_pubkey.content | b64decode).strip() }}\n"
     dest: "{{ ansible_facts.env.HOME }}/.ssh/allowed_signers"
     mode: "0644"
   when:
-    - mac_dev_playbook_git_email.rc == 0
-    - mac_dev_playbook_git_email.stdout | length > 0
+    - mac_dev_playbook_git_email.config_value | length > 0
     - mac_dev_playbook_ssh_pubkey is succeeded
   tags:
     - dotfiles

@@ -141,17 +141,6 @@ mac_dev_playbook_apt_repo_packages:
     components:
       - main
     signed_by: https://acli.atlassian.com/gpg/public-key.asc
-  - name: awsvpnclient
-    description: "AWS Client VPN"
-    # Official install instructions (CloudFront-hosted, no vanity AWS domain):
-    # https://docs.aws.amazon.com/vpn/latest/clientvpn-user/client-vpn-connect-linux-install.html
-    uris: https://d20adtppz83p9s.cloudfront.net/GTK/latest/debian-repo
-    suites: ubuntu
-    components:
-      - main
-    architectures:
-      - amd64
-    signed_by: https://d20adtppz83p9s.cloudfront.net/GTK/latest/debian-repo/awsvpnclient_public_key.asc
 
 # Flatpak (Flathub) installs, only on Ubuntu/Debian. IntelliJ IDEA is an
 # unofficial community package on Flathub (not published by JetBrains).
