@@ -3,15 +3,17 @@
 repos:
   - repo: local
     hooks:
-      # Mode must be exactly 0755, not whatever `chmod +x` yields: under a 002
-      # umask it produces 0775, which the playbook then rewrites to 0755 in
-      # $HOME on every run. Git only records 100755/100644, so the group bit
-      # has to be normalized here.
-      - id: make-zshrc-scripts-executable
-        name: Make .zshrc.d scripts executable (0755)
-        entry: find roles/mac_dev_playbook/files/HOME/.zshrc.d -type f -name "*.zsh" -exec chmod 755 {} +
+      # Shebang scripts get +x, and every file gets its group/other write bits
+      # stripped: `chmod +x` under a 002 umask yields 0775, which the dotfiles
+      # sync copies verbatim to $HOME where the playbook forces 0755 -- the
+      # file would flip-flop on every run. Git only records 100755/100644, so
+      # the group bit has to be normalized here.
+      - id: normalize-file-modes
+        name: normalize file modes (0755 for shebang scripts, 0644 otherwise)
+        entry: bash -c 'for f in "$@"; do head -1 "$f" | grep -q "^#!" && chmod +x "$f"; chmod go-w "$f"; done' --
         language: system
-        pass_filenames: false
+        types: [file]
+        pass_filenames: true
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
     hooks:
