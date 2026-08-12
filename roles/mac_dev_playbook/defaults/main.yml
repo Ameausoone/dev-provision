@@ -44,6 +44,7 @@ mac_dev_playbook_homebrew_installed_packages_common:
   - hashicorp/tap/vault     # Vault is a tool for managing secrets
   - jq                      # jq is a lightweight and flexible command-line JSON processor
   - k9s                     # k9s is a Kubernetes CLI
+  - kubectx                 # kubectx/kubens are CLIs for switching between kubectl contexts/namespaces
   - lazygit                 # lazygit is a terminal UI for git commands
   - lf                      # lf is a terminal file manager
   - markdownlint-cli2       # is a slightly unconventional command-line interface for markdownlint.

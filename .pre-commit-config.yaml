@@ -3,9 +3,13 @@
 repos:
   - repo: local
     hooks:
+      # Mode must be exactly 0755, not whatever `chmod +x` yields: under a 002
+      # umask it produces 0775, which the playbook then rewrites to 0755 in
+      # $HOME on every run. Git only records 100755/100644, so the group bit
+      # has to be normalized here.
       - id: make-zshrc-scripts-executable
-        name: Make .zshrc.d scripts executable
-        entry: find roles/mac_dev_playbook/files/HOME/.zshrc.d -type f -name "*.zsh" -exec chmod +x {} +
+        name: Make .zshrc.d scripts executable (0755)
+        entry: find roles/mac_dev_playbook/files/HOME/.zshrc.d -type f -name "*.zsh" -exec chmod 755 {} +
         language: system
         pass_filenames: false
   - repo: https://github.com/pre-commit/pre-commit-hooks
