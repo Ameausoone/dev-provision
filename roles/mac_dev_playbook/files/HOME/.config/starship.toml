@@ -6,7 +6,7 @@ $directory$git_branch${custom.github_pr}$git_status
 $character"""
 
 # Right prompt: runtime context (non-intrusive, right-aligned)
-right_format = """$status$cmd_duration$jobs$python$golang$kubernetes$aws$terraform$gcloud$battery"""
+right_format = """$status$cmd_duration$jobs$python$golang$kubernetes${custom.aws_danger}$aws$terraform$gcloud$battery"""
 
 [directory]
 truncation_length = 4      # max path segments to show
@@ -64,8 +64,20 @@ style = "bold cyan"
 disabled = false
 format = "[$context]($style) "
 style = "bold blue"
-# shorten well-known context names to avoid cluttering the prompt
-context_aliases = { ".*prod.*" = "prod", ".*staging.*" = "stg" }
+
+# https://starship.rs/config/#kubernetes
+# Shorten well-known context names and colour them by blast radius. Rules are
+# evaluated in order, first match wins -- the preprod/staging rule must stay
+# first, otherwise ".*prod.*" would swallow "preprod" and paint it red.
+[[kubernetes.contexts]]
+context_pattern = ".*(preprod|staging).*"
+context_alias = "stg"
+style = "bold yellow"
+
+[[kubernetes.contexts]]
+context_pattern = ".*prod.*"
+context_alias = "prod"
+style = "bold red"
 
 [aws]
 # https://starship.rs/config/#aws
@@ -95,11 +107,23 @@ disabled = true
 threshold = 30     # only show battery when below 30%
 style = "bold red"
 
+# The [aws] module has no per-profile styling, so a red badge carries the warning
+# instead. Matches "<something>-prod" (not "-preprod") and every "-adm" profile,
+# which assumes role/admin rather than the day-to-day infra-admin role.
+[custom.aws_danger]
+shell = ["sh"]
+when = 'case "$AWS_PROFILE" in *-prod|*-adm) exit 0;; esac; exit 1'
+command = 'case "$AWS_PROFILE" in *-prod-adm) echo "PROD ADMIN";; *-prod) echo PROD;; *) echo ADMIN;; esac'
+format = "[$output]($style) "
+style = "bold white bg:red"
+
 # Shows [#N] linking to the open PR, or branch name linking to GitHub if no PR.
 # Cache: ~/.starship/github_pr_cache/ — async fork, atomic writes, flock.
+# shell must not carry "-c": starship feeds the command on the shell's stdin, so
+# a trailing "-c" consumes nothing and the shell exits 2 before running anything.
 [custom.github_pr]
 command = "python3 ~/.starship/github_pr.py"
 when = "git remote get-url origin 2>/dev/null | grep -q github.com"
-shell = ["bash", "-c"]
+shell = ["bash"]
 format = "$output "
 unsafe_no_escape = true
