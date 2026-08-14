@@ -35,6 +35,7 @@ mac_dev_playbook_homebrew_installed_packages_common:
   - docker-compose          # Docker Compose is a tool for defining and running multi-container Docker applications
   - docker-credential-helper # Docker Credential Helper
   - fd                      # fd is a modern find replacement
+  - fjira                   # fjira is a fuzzy-find terminal UI for Jira (complements acli)
   - fzf                     # fzf is a command-line fuzzy finder
   - git                     # Git is a version control system
   - git-lfs                 # Git LFS is a Git extension for versioning large files

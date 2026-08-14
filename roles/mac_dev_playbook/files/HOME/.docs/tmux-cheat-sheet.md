@@ -1,6 +1,7 @@
 # Tmux
 
 Prefix key: `Ctrl-b` (default), shown as `PREFIX` below.
+Config: `~/.tmux.conf` (mouse on, vi copy mode, windows/panes numbered from 1).
 
 ## Sessions
 ```sh
@@ -21,7 +22,7 @@ PREFIX (  )     previous/next session
 PREFIX c        create window
 PREFIX ,        rename window
 PREFIX &        kill window
-PREFIX 0-9      switch to window number
+PREFIX 1-9      switch to window number
 PREFIX n  p     next/previous window
 PREFIX w        list windows
 ```
@@ -40,8 +41,8 @@ PREFIX space    cycle pane layouts
 ## Copy mode
 ```
 PREFIX [        enter copy mode
-space           start selection (vi keys)
-enter           copy selection
+v               start selection
+y               copy selection and exit
 PREFIX ]        paste
 ```
 
@@ -49,5 +50,5 @@ PREFIX ]        paste
 ```
 PREFIX ?        list all keybindings
 PREFIX :        command prompt (e.g. :kill-server)
-PREFIX r        reload config (if bound in .tmux.conf)
+PREFIX r        reload ~/.tmux.conf
 ```

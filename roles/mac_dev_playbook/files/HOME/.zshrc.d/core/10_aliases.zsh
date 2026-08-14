@@ -167,6 +167,6 @@ alias good-readme="open https://github.com/othneildrew/Best-README-Template"
 # Tool Aliases
 # ==============================================================================
 
-alias upgrade="brew upgrade && mise upgrade"
+alias dp-upgrade="brew upgrade && mise upgrade"
 alias diff="grc diff"
 alias yaml="highlight --force --syntax yaml"
