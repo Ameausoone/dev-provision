@@ -33,12 +33,12 @@ acli jira workitem comment list --key TEAM-123
 jira <cmd>                                                                    # wrapper sur `acli jira`
 jira-mine                                                                     # mes tickets non terminés
 jira-view TEAM-123                                                            # voir un ticket
+jira-open TEAM-123                                                            # ouvrir dans le navigateur
 jira-comment TEAM-123 "some comment"                                          # commenter
 jira-move TEAM-123 "In Progress"                                              # transitionner
 ```
-`jira-<TAB>` liste les raccourcis. TAB sur l'argument de `jira-view`/`-comment`/`-move`
-complète mes tickets ouverts (cache 5min dans `$XDG_CACHE_HOME/acli-workitem-keys`
-— acli n'a pas de cache natif).
+`jira-<TAB>` liste les raccourcis. TAB sur l'argument de `jira-view`/`-open`/`-comment`/`-move`
+complète mes tickets ouverts (un appel Jira par TAB, acli n'a pas de cache).
 
 ## TUI
 ```sh

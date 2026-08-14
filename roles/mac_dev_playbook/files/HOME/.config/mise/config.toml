@@ -17,6 +17,7 @@ hugo = "0"                  # Static site generator
 java = "temurin-24"         # Eclipse Temurin JDK
 kubectl = "1"               # Kubernetes command-line tool
 maven = "3"                 # Java build automation tool
+opentofu = "1.12"           # Open-source Terraform fork
 pre-commit = "4"            # Git hooks framework
 shfmt = "3"                 # Shell formatter
 terraform = "1.15"          # Infrastructure as Code tool
