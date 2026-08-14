@@ -6,7 +6,7 @@ $directory$git_branch${custom.github_pr}$git_status
 $character"""
 
 # Right prompt: runtime context (non-intrusive, right-aligned)
-right_format = """$status$cmd_duration$jobs$python$golang$kubernetes$terraform$gcloud$battery"""
+right_format = """$status$cmd_duration$jobs$python$golang$kubernetes$aws$terraform$gcloud$battery"""
 
 [directory]
 truncation_length = 4      # max path segments to show
@@ -66,6 +66,17 @@ format = "[$context]($style) "
 style = "bold blue"
 # shorten well-known context names to avoid cluttering the prompt
 context_aliases = { ".*prod.*" = "prod", ".*staging.*" = "stg" }
+
+[aws]
+# https://starship.rs/config/#aws
+# force_display: with an SSO-only setup there is no ~/.aws/credentials and no
+# AWS_ACCESS_KEY_ID, so starship never "detects" credentials and stays silent.
+# The outer ( ) drops the module entirely when AWS_PROFILE is unset -- without
+# it, force_display prints the region of the default profile on every prompt.
+force_display = true
+format = "([$profile]($style) )"
+style = "bold yellow"
+expiration_symbol = " !"   # appended when the cached token has expired
 
 [terraform]
 # shows current workspace (default = "default")
