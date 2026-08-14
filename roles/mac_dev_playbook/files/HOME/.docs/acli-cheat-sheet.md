@@ -20,9 +20,10 @@ acli jira workitem comment create --key TEAM-123 --body "some comment"
 ```sh
 jira-mine                                                                     # mes tickets non terminés
 jira-view TEAM-123
-jira-open TEAM-123                                                            # ouvrir dans le navigateur
+jira-web TEAM-123                                                             # ouvrir dans le navigateur (URL directe)
 jira-comment TEAM-123 "some comment"
 jira-move TEAM-123 "In Progress"
+git log | jira-linkify                                                       # rend les clés cliquables (OSC 8)
 ```
 
 ## TUI
