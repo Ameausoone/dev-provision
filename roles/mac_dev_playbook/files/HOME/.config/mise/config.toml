@@ -10,6 +10,7 @@ claude-code = "latest"      # Claude Code CLI tool
 cookiecutter = "latest"     # Cookiecutter is a command-line utility that creates projects from project templates
 devcontainer-cli = "latest" # devcontainers is a command line tool for managing devcontainers
 fnox = "latest"             # Secret cli injector https://fnox.jdx.dev/
+"pipx:gita" = "latest"      # gita manages many git repos at once, no Homebrew formula exists
 #gcloud = "548"              # Google Cloud CLI
 #golang = "1"                # Go programming language
 helm = "3"                  # Kubernetes package manager

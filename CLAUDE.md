@@ -79,7 +79,9 @@ mise run compare-dotfiles
   failed `apt_repository` attempt's error output, or from the PPA's Launchpad page.
 - Dotfiles go under `roles/mac_dev_playbook/files/HOME/` mirroring the `$HOME` structure
 - New cheat sheets go under `.docs/` as `<tool>-cheat-sheet.md`, terse `## Section` + fenced code
-  block style (see `git-cheat-sheet.md`)
+  block style (see `git-cheat-sheet.md`). Keep them short — only essential/daily commands
+  (~5-15 total), not exhaustive tool coverage; drop niche subcommands, long prose, and one-off
+  scripts.
 - zsh scripts in `.zshrc.d/` are loaded alphabetically — use numeric prefixes (`00_`, `01_`) to control order
 - When adding a new CLI tool, check whether it needs shell completion configured. Homebrew-installed
   tools that ship a static `_<tool>` file (gh, git, mise, starship, copilot, k9s, atuin, ...)
