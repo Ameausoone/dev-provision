@@ -108,12 +108,11 @@ threshold = 30     # only show battery when below 30%
 style = "bold red"
 
 # The [aws] module has no per-profile styling, so a red badge carries the warning
-# instead. Matches "<something>-prod" (not "-preprod") and every "-adm" profile,
-# which assumes role/admin rather than the day-to-day infra-admin role.
+# instead. Matches "<something>-prod" but not "-preprod" (which ends in "eprod").
 [custom.aws_danger]
 shell = ["sh"]
-when = 'case "$AWS_PROFILE" in *-prod|*-adm) exit 0;; esac; exit 1'
-command = 'case "$AWS_PROFILE" in *-prod-adm) echo "PROD ADMIN";; *-prod) echo PROD;; *) echo ADMIN;; esac'
+when = 'case "$AWS_PROFILE" in *-prod) exit 0;; esac; exit 1'
+command = "echo PROD"
 format = "[$output]($style) "
 style = "bold white bg:red"
 
