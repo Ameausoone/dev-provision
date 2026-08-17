@@ -16,14 +16,15 @@ acli jira workitem transition --key TEAM-123 --status "In Progress"
 acli jira workitem comment create --key TEAM-123 --body "some comment"
 ```
 
-## Raccourcis (.zshrc.d/core/50_acli.zsh)
+## Raccourcis (.zshrc.d/core/50_jira.zsh)
 ```sh
-jira-mine                                                                     # mes tickets non terminés
-jira-view TEAM-123
-jira-web TEAM-123                                                             # ouvrir dans le navigateur (URL directe)
-jira-comment TEAM-123 "some comment"
-jira-move TEAM-123 "In Progress"
-git log | jira-linkify                                                       # rend les clés cliquables (OSC 8)
+jira mine                                                                     # mes tickets non terminés
+jira view TEAM-123
+jira open TEAM-123                                                            # ouvrir dans le navigateur (URL directe)
+jira comment TEAM-123 "some comment"
+jira move TEAM-123 "In Progress"
+git log | jira linkify                                                        # rend les clés cliquables (OSC 8)
+jira workitem search --jql "..."                                              # verbe inconnu = passthrough vers acli
 ```
 
 ## TUI

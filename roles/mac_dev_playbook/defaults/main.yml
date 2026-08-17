@@ -162,7 +162,9 @@ mac_dev_playbook_deb_cache_max_age: 2w
 
 # Direct .deb installs on Ubuntu/Debian, for upstreams that publish a .deb but
 # no apt repository. The URL points at the project's latest release, so a run
-# that refreshes the cache also upgrades to whatever is current.
+# that refreshes the cache also upgrades to whatever is current. `name` only
+# names the cached file -- dpkg takes the package name from the .deb itself
+# (github-copilot's, for instance, is just `github`).
 mac_dev_playbook_apt_deb_packages:
   - name: github-copilot
     description: "GitHub Copilot desktop app"

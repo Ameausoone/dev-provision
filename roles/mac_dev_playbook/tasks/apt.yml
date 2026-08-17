@@ -1,4 +1,25 @@
 ---
+# claude-desktop's postinst registers the same repo as the deb822 entry below,
+# under its own keyring path -- and apt hard-fails on a source declared twice
+# with two Signed-By paths. These two tasks come first because that failure
+# breaks every apt call, not just the one installing claude-desktop.
+- name: Opt claude-desktop out of registering its own apt source
+  ansible.builtin.copy:
+    dest: /etc/default/claude-desktop
+    content: |
+      # Repo registration is owned by the deb822 entry this playbook manages.
+      CLAUDE_DESKTOP_ADD_REPO="false"
+    mode: "0644"
+  become: true
+
+# Opting out only stops the postinst from rewriting the file, it never removes
+# one left by an earlier install.
+- name: Remove the apt source registered by claude-desktop
+  ansible.builtin.file:
+    path: /etc/apt/sources.list.d/claude-desktop.list
+    state: absent
+  become: true
+
 - name: Install apt packages
   ansible.builtin.apt:
     name: "{{ mac_dev_playbook_apt_packages }}"
