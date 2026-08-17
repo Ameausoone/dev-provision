@@ -17,10 +17,38 @@
     - docker-buildx
     - docker-compose
 
-- name: Link Rancher Desktop Docker socket to /var/run/docker.sock
+# /var/run is a symlink to /run, a tmpfs -- a symlink dropped there is gone on
+# the next boot. systemd-tmpfiles is what repopulates /run, so the persistent
+# thing to provision is the rule, not the symlink itself. See
+# docs/docker-socket-tmpfs.md.
+- name: Recreate the Rancher Desktop Docker socket link on every boot (Linux)
+  ansible.builtin.copy:
+    dest: /etc/tmpfiles.d/rancher-desktop-docker-sock.conf
+    content: |
+      # Managed by dev-provision -- see roles/mac_dev_playbook/tasks/docker.yml
+      # L+ replaces whatever sits at the path, matching the force: true this rule
+      # replaced. The target need not exist yet: Rancher Desktop creates it when
+      # it starts, and a dangling symlink until then is harmless.
+      L+ /run/docker.sock - - - - {{ ansible_facts.env.HOME }}/.rd/docker.sock
+    mode: "0644"
+  become: true
+  when: ansible_facts.os_family == 'Debian'
+
+# systemd only reads the rule at boot, so apply it once here for the current
+# session. Reported unconditionally as unchanged: systemd-tmpfiles converges the
+# symlink itself, and re-running it on an already-correct link is a no-op.
+- name: Apply the Docker socket tmpfiles rule now (Linux)
+  ansible.builtin.command: systemd-tmpfiles --create /etc/tmpfiles.d/rancher-desktop-docker-sock.conf
+  become: true
+  changed_when: false
+  when: ansible_facts.os_family == 'Debian'
+
+# macOS has no systemd; /var/run there is not a tmpfs, so the plain symlink holds.
+- name: Link Rancher Desktop Docker socket to /var/run/docker.sock (macOS)
   ansible.builtin.file:
     src: "{{ ansible_facts.env.HOME }}/.rd/docker.sock"
     dest: /var/run/docker.sock
     state: link
     force: true
   become: true
+  when: ansible_facts.os_family == 'Darwin'
