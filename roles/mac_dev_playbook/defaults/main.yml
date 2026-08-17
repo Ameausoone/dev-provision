@@ -86,6 +86,8 @@ mac_dev_playbook_homebrew_installed_packages_darwin_only:
   - intellij-idea           # IntelliJ IDEA is a Java IDE (installed via Flatpak on Ubuntu)
   - visual-studio-code      # Visual Studio Code is a code editor (installed via apt on Ubuntu)
   - aws-vpn-client          # AWS Client VPN (installed via apt repo on Ubuntu)
+  - claude                  # Claude desktop app (installed via apt repo on Ubuntu)
+  - github-copilot-app      # GitHub Copilot desktop app (installed via direct .deb on Ubuntu)
 
 mac_dev_playbook_homebrew_installed_packages: >-
   {{ mac_dev_playbook_homebrew_installed_packages_common
@@ -143,6 +145,31 @@ mac_dev_playbook_apt_repo_packages:
     components:
       - main
     signed_by: https://acli.atlassian.com/gpg/public-key.asc
+  - name: claude-desktop
+    description: "Claude desktop app"
+    # https://support.claude.com/en/articles/10065433-install-claude-desktop
+    uris: https://downloads.claude.ai/claude-desktop/apt/stable
+    suites: stable
+    components:
+      - main
+    signed_by: https://downloads.claude.ai/claude-desktop/key.asc
+
+# Local cache for the direct .deb installs below. ansible.builtin.apt fetches a
+# deb: URL on every run and only compares versions afterwards, so the .deb is
+# downloaded here instead and refreshed once it is older than the max age.
+mac_dev_playbook_deb_cache_dir: "{{ ansible_facts.env.HOME }}/.cache/dev-provision/deb"
+mac_dev_playbook_deb_cache_max_age: 2w
+
+# Direct .deb installs on Ubuntu/Debian, for upstreams that publish a .deb but
+# no apt repository. The URL points at the project's latest release, so a run
+# that refreshes the cache also upgrades to whatever is current.
+mac_dev_playbook_apt_deb_packages:
+  - name: github-copilot
+    description: "GitHub Copilot desktop app"
+    # https://github.com/github/app -- releases ship .deb/.rpm/AppImage only
+    url: >-
+      https://github.com/github/app/releases/latest/download/GitHub-Copilot-linux-{{
+      'arm64' if ansible_facts.architecture == 'aarch64' else 'x64' }}.deb
 
 # Flatpak (Flathub) installs, only on Ubuntu/Debian. IntelliJ IDEA is an
 # unofficial community package on Flathub (not published by JetBrains).

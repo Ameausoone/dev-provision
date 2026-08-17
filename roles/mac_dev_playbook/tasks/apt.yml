@@ -33,6 +33,53 @@
   loop_control:
     label: "{{ item.name }}"
 
+- name: Create .deb cache directory
+  ansible.builtin.file:
+    path: "{{ mac_dev_playbook_deb_cache_dir }}"
+    state: directory
+    mode: "0755"
+
+- name: Find cached .deb packages still within the max age
+  ansible.builtin.find:
+    paths: "{{ mac_dev_playbook_deb_cache_dir }}"
+    patterns: "*.deb"
+    age: "-{{ mac_dev_playbook_deb_cache_max_age }}"
+  register: mac_dev_playbook_deb_cache_fresh
+
+- name: Download .deb packages missing from or stale in the cache
+  ansible.builtin.get_url:
+    url: "{{ item.url }}"
+    dest: "{{ mac_dev_playbook_deb_cache_dir }}/{{ item.name }}.deb"
+    mode: "0644"
+    force: true
+  loop: "{{ mac_dev_playbook_apt_deb_packages }}"
+  loop_control:
+    label: "{{ item.name }}"
+  when: mac_dev_playbook_deb_cache_dir ~ '/' ~ item.name ~ '.deb'
+        not in mac_dev_playbook_deb_cache_fresh.files | map(attribute='path')
+  register: mac_dev_playbook_deb_download
+
+# get_url leaves the file untouched when the release has not moved, so its mtime
+# would stay stale and trigger a re-download on every subsequent run.
+- name: Restart the cache countdown of .deb packages that were already current
+  ansible.builtin.file:
+    path: "{{ item.dest }}"
+    state: touch
+    mode: "0644"
+  loop: "{{ mac_dev_playbook_deb_download.results }}"
+  loop_control:
+    label: "{{ item.item.name }}"
+  when: not (item.skipped | default(false)) and not item.changed
+  changed_when: false
+
+- name: Install cached .deb packages
+  ansible.builtin.apt:
+    deb: "{{ mac_dev_playbook_deb_cache_dir }}/{{ item.name }}.deb"
+  become: true
+  loop: "{{ mac_dev_playbook_apt_deb_packages }}"
+  loop_control:
+    label: "{{ item.name }}"
+
 - name: Create local fonts directory
   ansible.builtin.file:
     path: "{{ ansible_facts.env.HOME }}/.local/share/fonts"

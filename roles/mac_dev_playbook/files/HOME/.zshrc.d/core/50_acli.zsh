@@ -6,7 +6,7 @@ source <(acli completion zsh)
 _acli_my_jql='assignee = currentUser() AND status != Done'
 
 jira() { acli jira "$@"; }
-jira-mine() { acli jira workitem search --jql "$_acli_my_jql" "$@"; }
+jira-mine() { acli jira workitem search --jql "$_acli_my_jql" "$@" | jira-linkify; }
 jira-view() { acli jira workitem view "$1"; }
 jira-open() { acli jira workitem view "$1" --web; }
 jira-comment() { acli jira workitem comment create --key "$1" --body "$2"; }
@@ -36,7 +36,9 @@ jira-web() {
 # regex-to-link detection yet (https://github.com/ghostty-org/ghostty/discussions/4379).
 jira-linkify() {
   local site="$(_jira_site)"
-  if [[ -z "$site" ]]; then
+  # Skip when stdout isn't a terminal (redirected to a file, --csv/--json
+  # consumed by a script, etc.) -- OSC 8 escapes would corrupt that output.
+  if [[ -z "$site" ]] || [[ ! -t 1 ]]; then
     cat
     return
   fi

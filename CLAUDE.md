@@ -68,8 +68,11 @@ mise run compare-dotfiles
 - Add/remove packages in `roles/mac_dev_playbook/defaults/main.yml` (not in task files). Cross-platform
   formulae go in `mac_dev_playbook_homebrew_installed_packages_common`; macOS-only ones in
   `*_darwin_only`; Ubuntu-only GUI apps go in `mac_dev_playbook_apt_packages`,
-  `mac_dev_playbook_apt_repo_packages` (apt packages needing their own repo/GPG key), or
-  `mac_dev_playbook_flatpak_packages`.
+  `mac_dev_playbook_apt_repo_packages` (apt packages needing their own repo/GPG key),
+  `mac_dev_playbook_apt_deb_packages` (upstream ships a .deb but no apt repo — the latest release
+  URL, cached under `mac_dev_playbook_deb_cache_dir` and re-downloaded only once older than
+  `mac_dev_playbook_deb_cache_max_age`, since `ansible.builtin.apt` fetches a `deb:` URL on every
+  run and only compares versions afterwards), or `mac_dev_playbook_flatpak_packages`.
 - `mac_dev_playbook_apt_repo_packages` also covers Launchpad PPAs (e.g. `ghostty` via
   `ppa:mkasberg/ghostty-ubuntu`): use `uris: https://ppa.launchpadcontent.net/<user>/<ppa>/ubuntu/`,
   `suites: "{{ ansible_facts.distribution_release }}"`, and `signed_by` pointing at an HTTPS
