@@ -19,6 +19,7 @@ acli jira workitem comment create --key TEAM-123 --body "some comment"
 ## Raccourcis (.zshrc.d/core/50_jira.zsh)
 ```sh
 jira mine                                                                     # mes tickets non terminés
+jira search NTP                                                               # recherche texte, scopée à $JIRA_DEFAULT_PROJECT si défini
 jira view TEAM-123
 jira open TEAM-123                                                            # ouvrir dans le navigateur (URL directe)
 jira comment TEAM-123 "some comment"

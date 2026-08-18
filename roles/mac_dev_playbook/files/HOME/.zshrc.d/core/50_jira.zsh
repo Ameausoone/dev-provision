@@ -12,12 +12,18 @@ typeset -gA _jira_help
 _jira_help[view]='show a work item'
 _jira_help[open]='open a work item in the browser'
 _jira_help[mine]='my unfinished work items'
+_jira_help[search]='search work items by text, e.g. jira search NTP'
 _jira_help[comment]='add a comment to a work item'
 _jira_help[move]='transition a work item to a status'
 _jira_help[linkify]='make work item keys in piped output clickable'
 
 # Shared by `jira mine` and the key completion below.
 __jira_my_jql='assignee = currentUser() AND status != Done'
+
+# Set in the private companion repo (e.g. `export JIRA_DEFAULT_PROJECT=INFC`)
+# to scope `jira search` to a single project. Unset here to keep this public
+# repo employer-agnostic.
+: ${JIRA_DEFAULT_PROJECT:=}
 
 # ------------------------------------------------------------------------------
 # Internals
@@ -72,6 +78,17 @@ _jira_open() {
 
 _jira_mine() {
   acli jira workitem search --jql "$__jira_my_jql" "$@" | _jira_linkify
+}
+
+_jira_search() {
+  if [[ -z "$1" ]]; then
+    print -u2 'jira search: usage: jira search <text>'
+    return 2
+  fi
+
+  local jql="text ~ \"$1\""
+  [[ -n "$JIRA_DEFAULT_PROJECT" ]] && jql="project = $JIRA_DEFAULT_PROJECT AND $jql"
+  acli jira workitem search --jql "$jql" "${@:2}" | _jira_linkify
 }
 
 _jira_comment() {
@@ -165,7 +182,7 @@ _jira() {
         (( CURRENT == 3 )) && __jira_keys
         return
         ;;
-      mine|linkify) return ;;
+      mine|search|linkify) return ;;
     esac
   fi
 
