@@ -53,7 +53,14 @@ mise run compare-dotfiles
 
 - `main.yml` — entry point, delegates to `roles/mac_dev_playbook`
 - `roles/mac_dev_playbook/tasks/main.yml` — task orchestration (oh-my-zsh → dotfiles → brew → apt/flatpak[Ubuntu only] → docker → github → shells → osx[macOS only])
-- `roles/mac_dev_playbook/tasks/apt.yml` / `flatpak.yml` — Ubuntu-only, imported when `ansible_facts.os_family == 'Debian'`
+- `roles/mac_dev_playbook/tasks/apt.yml` / `flatpak.yml` — Ubuntu-only, imported when `ansible_facts.os_family == 'Debian'`.
+  `apt.yml` opts `claude-desktop` and `google-chrome-stable` out of registering their own apt
+  source (`/etc/default/<pkg>`, then deleting any `.list` a previous install left): both postinsts
+  re-declare the repo this playbook already manages as a deb822 entry, and apt hard-fails on a
+  source declared twice with two `Signed-By` paths. `flatpak.yml` also uninstalls
+  `mac_dev_playbook_flatpak_packages_absent` — currently Chrome, which moved to Google's apt repo
+  because the Flatpak sandbox cannot reach the PC/SC daemon (no YubiKey), client certificates or
+  native messaging hosts
 - `roles/mac_dev_playbook/defaults/main.yml` — all package lists (Homebrew taps, common vs `*_darwin_only` packages, apt packages/repos, flatpak packages, npm packages, gh CLI extensions)
 - `roles/mac_dev_playbook/files/HOME/` — dotfiles copied recursively to `$HOME` on each playbook run
 - `roles/mac_dev_playbook/files/HOME/.zshrc.d/` — zsh config fragments, sourced alphabetically by `~/.zshrc`; several fragments branch on `uname` to skip macOS-only setup (coreutils PATH shim, IntelliJ launcher, oh-my-zsh `iterm2`/`macos` plugins)

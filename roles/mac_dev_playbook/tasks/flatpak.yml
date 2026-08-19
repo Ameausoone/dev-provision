@@ -12,3 +12,10 @@
     state: present
   become: true
   loop: "{{ mac_dev_playbook_flatpak_packages }}"
+
+- name: Uninstall flatpak packages no longer wanted
+  community.general.flatpak:
+    name: "{{ item }}"
+    state: absent
+  become: true
+  loop: "{{ mac_dev_playbook_flatpak_packages_absent }}"

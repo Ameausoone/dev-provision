@@ -153,6 +153,16 @@ mac_dev_playbook_apt_repo_packages:
     components:
       - main
     signed_by: https://downloads.claude.ai/claude-desktop/key.asc
+  - name: google-chrome-stable
+    description: Google Chrome
+    # https://support.google.com/chrome/a/answer/9025903
+    uris: https://dl.google.com/linux/chrome/deb/
+    suites: stable
+    components:
+      - main
+    architectures:
+      - amd64
+    signed_by: https://dl.google.com/linux/linux_signing_key.pub
 
 # Local cache for the direct .deb installs below. ansible.builtin.apt fetches a
 # deb: URL on every run and only compares versions afterwards, so the .deb is
@@ -176,9 +186,15 @@ mac_dev_playbook_apt_deb_packages:
 # Flatpak (Flathub) installs, only on Ubuntu/Debian. IntelliJ IDEA is an
 # unofficial community package on Flathub (not published by JetBrains).
 mac_dev_playbook_flatpak_packages:
-  - com.google.Chrome
   - com.jetbrains.IntelliJ-IDEA-Ultimate
   - org.keystore_explorer.KeyStoreExplorer
+
+# Flatpak packages to actively remove. Chrome moved to Google's own apt repo
+# (see mac_dev_playbook_apt_repo_packages): the Flatpak sandbox has no access to
+# the PC/SC daemon, so the YubiKey is invisible to it, and client certificates
+# and native messaging hosts are out of reach for the same reason.
+mac_dev_playbook_flatpak_packages_absent:
+  - com.google.Chrome
 
 mac_dev_playbook_gh_cli_extensions:
   - mislav/gh-branch        # GitHub CLI extension for managing branches

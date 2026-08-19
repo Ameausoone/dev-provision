@@ -20,6 +20,26 @@
     state: absent
   become: true
 
+# Same story as claude-desktop above: google-chrome-stable's postinst writes
+# /etc/apt/sources.list.d/google-chrome.list, which collides with the deb822
+# entry this playbook manages. repo_add_once is the documented opt-out, read by
+# the postinst from /etc/default/google-chrome.
+- name: Opt google-chrome out of registering its own apt source
+  ansible.builtin.copy:
+    dest: /etc/default/google-chrome
+    content: |
+      # Repo registration is owned by the deb822 entry this playbook manages.
+      repo_add_once="false"
+      repo_reenable_on_distupgrade="false"
+    mode: "0644"
+  become: true
+
+- name: Remove the apt source registered by google-chrome
+  ansible.builtin.file:
+    path: /etc/apt/sources.list.d/google-chrome.list
+    state: absent
+  become: true
+
 - name: Install apt packages
   ansible.builtin.apt:
     name: "{{ mac_dev_playbook_apt_packages }}"
