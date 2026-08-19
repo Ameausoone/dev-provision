@@ -3,7 +3,7 @@
 [tools]
 pipx = "latest"
 ansible = "latest"
-python = "3.13"
+python = "3.14.7"
 ls-lint = "latest"
 
 [tasks.compare-dotfiles]
