@@ -74,6 +74,32 @@
   loop_control:
     label: "{{ item.name }}"
 
+# Unauthenticated, so subject to GitHub's 60 requests/hour limit -- one request
+# per entry, on every run.
+- name: Resolve the latest release of GitHub-published .deb packages
+  ansible.builtin.uri:
+    url: "https://api.github.com/repos/{{ item.repo }}/releases/latest"
+  register: mac_dev_playbook_deb_github_releases
+  loop: "{{ mac_dev_playbook_apt_deb_github_packages }}"
+  loop_control:
+    label: "{{ item.name }}"
+
+# Appending rather than handling them separately: from here on the cache,
+# download and install tasks treat both kinds of .deb the same way.
+- name: Add the resolved .deb URLs to the install list
+  ansible.builtin.set_fact:
+    mac_dev_playbook_apt_deb_packages: "{{ mac_dev_playbook_apt_deb_packages + [{
+      'name': item.item.name,
+      'description': item.item.description,
+      'url': (item.json.assets
+              | selectattr('name', 'match', item.item.asset_regex)
+              | map(attribute='browser_download_url')
+              | first),
+    }] }}"
+  loop: "{{ mac_dev_playbook_deb_github_releases.results }}"
+  loop_control:
+    label: "{{ item.item.name }}"
+
 - name: Create .deb cache directory
   ansible.builtin.file:
     path: "{{ mac_dev_playbook_deb_cache_dir }}"

@@ -183,18 +183,51 @@ mac_dev_playbook_apt_deb_packages:
       https://github.com/github/app/releases/latest/download/GitHub-Copilot-linux-{{
       'arm64' if ansible_facts.architecture == 'aarch64' else 'x64' }}.deb
 
-# Flatpak (Flathub) installs, only on Ubuntu/Debian. IntelliJ IDEA is an
-# unofficial community package on Flathub (not published by JetBrains).
-mac_dev_playbook_flatpak_packages:
+# Same thing, for upstreams that put the version in the asset name
+# (`kse_5.6.1_all.deb`), which `releases/latest/download/<name>` cannot resolve.
+# apt.yml looks the asset up in the GitHub releases API at run time and appends
+# the result to mac_dev_playbook_apt_deb_packages above, so the cache and install
+# tasks treat both lists identically. `name` names the cached file, and stays
+# stable across versions, so a new release is picked up when the cache expires.
+mac_dev_playbook_apt_deb_github_packages:
+  - name: keystore-explorer
+    description: KeyStore Explorer
+    # https://github.com/kaikramer/keystore-explorer/releases
+    repo: kaikramer/keystore-explorer
+    # The release also ships .rpm, .dmg, .exe and .zip -- match the Debian one only.
+    asset_regex: '^kse_.*_all\.deb$'
+
+# Flatpak (Flathub) installs, only on Ubuntu/Debian. Nothing left here: every
+# app that used to be installed this way now comes from a channel its own vendor
+# publishes -- see mac_dev_playbook_flatpak_packages_absent for why.
+mac_dev_playbook_flatpak_packages: []
+
+# Flatpak packages to actively remove, so a machine provisioned before the move
+# does not end up running two copies side by side. All three left Flathub for the
+# same reason: the sandbox has no access to the PC/SC daemon, so a YubiKey is
+# invisible from inside it, and client certificates and native messaging hosts
+# are out of reach too.
+#   - Chrome            -> Google's apt repo (mac_dev_playbook_apt_repo_packages)
+#   - IntelliJ IDEA     -> JetBrains' own snap (mac_dev_playbook_snap_packages);
+#                          the Flathub package was a community build, not theirs
+#   - KeyStore Explorer -> the .deb the project publishes on GitHub
+#                          (mac_dev_playbook_apt_deb_github_packages)
+mac_dev_playbook_flatpak_packages_absent:
+  - com.google.Chrome
   - com.jetbrains.IntelliJ-IDEA-Ultimate
   - org.keystore_explorer.KeyStoreExplorer
 
-# Flatpak packages to actively remove. Chrome moved to Google's own apt repo
-# (see mac_dev_playbook_apt_repo_packages): the Flatpak sandbox has no access to
-# the PC/SC daemon, so the YubiKey is invisible to it, and client certificates
-# and native messaging hosts are out of reach for the same reason.
-mac_dev_playbook_flatpak_packages_absent:
-  - com.google.Chrome
+# Snap installs, Ubuntu/Debian only. Used only where the vendor publishes here
+# and nowhere else usable: JetBrains has no apt repository at all
+# (download.jetbrains.com/debian/ 404s), and their snap is the one official
+# channel that is not a self-updating tarball outside the package manager.
+# `classic: true` means no confinement, which is the point -- an IDE needs the
+# host's toolchains, JDKs and ssh agent.
+# Requires snapd, which Ubuntu ships by default.
+mac_dev_playbook_snap_packages:
+  - name: intellij-idea-ultimate
+    description: IntelliJ IDEA Ultimate
+    classic: true
 
 mac_dev_playbook_gh_cli_extensions:
   - mislav/gh-branch        # GitHub CLI extension for managing branches

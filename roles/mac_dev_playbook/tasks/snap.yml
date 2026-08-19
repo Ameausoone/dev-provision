@@ -1,0 +1,10 @@
+---
+- name: Install snap packages
+  community.general.snap:
+    name: "{{ item.name }}"
+    classic: "{{ item.classic | default(false) }}"
+    state: present
+  become: true
+  loop: "{{ mac_dev_playbook_snap_packages }}"
+  loop_control:
+    label: "{{ item.name }}"

@@ -36,6 +36,12 @@
     - flatpak
   when: ansible_facts.os_family == 'Debian'
 
+- name: Provision snap packages (Ubuntu)
+  ansible.builtin.import_tasks: snap.yml
+  tags:
+    - snap
+  when: ansible_facts.os_family == 'Debian'
+
 - name: Configure Docker CLI plugins
   ansible.builtin.import_tasks: docker.yml
 
