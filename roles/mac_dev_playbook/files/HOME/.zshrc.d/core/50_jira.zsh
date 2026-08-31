@@ -156,7 +156,7 @@ __jira_keys() {
     local tmp="${cache}.new"
     if acli jira workitem search --jql "$__jira_my_jql" \
          --csv --fields key,summary >| "$tmp" 2>/dev/null && [[ -s "$tmp" ]]; then
-      mv "$tmp" "$cache"
+      command mv -f "$tmp" "$cache"
     else
       rm -f "$tmp"
     fi
