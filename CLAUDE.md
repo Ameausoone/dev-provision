@@ -98,7 +98,7 @@ mise run compare-dotfiles
   are picked up automatically via the `fpath` set in `00_zsh-plugins.zsh` — no extra work needed.
   Tools installed another way (mise, apt, apt-repo, manual binary) or whose formula doesn't ship a
   static completion (e.g. awscli) need their own `.zshrc.d/core/50_<tool>.zsh` fragment, typically
-  `source <(<tool> completion zsh)` (see `50_kubectl.zsh`, `50_jira.zsh`) — check the tool's own docs
+  `source <(<tool> completion zsh)` (see `50_kubectl.zsh`) — check the tool's own docs
   for the exact subcommand/flag first.
 - Ansible collections required: `community.general`, `ansible.posix` (install via `ansible-galaxy collection install -r requirements.yml`)
 - On Ubuntu, run with `--ask-become-pass` — the apt/flatpak/chsh tasks need sudo. Every privileged

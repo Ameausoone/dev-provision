@@ -15,6 +15,7 @@ mac_dev_playbook_homebrew_absent_packages:
   - antigen                 # replaced by brew zsh-* plugins + oh-my-zsh
   - pre-commit              # pre-commit is a git pre-commit hook framework, install it from mise instead
   - jira-cli                # replaced by acli (Atlassian's own CLI)
+  - fjira                   # Jira tooling is provisioned by the work playbook now
 
 # Formulae installed on every OS (macOS + Ubuntu via Linuxbrew).
 mac_dev_playbook_homebrew_installed_packages_common:
@@ -35,7 +36,6 @@ mac_dev_playbook_homebrew_installed_packages_common:
   - docker-compose          # Docker Compose is a tool for defining and running multi-container Docker applications
   - docker-credential-helper # Docker Credential Helper
   - fd                      # fd is a modern find replacement
-  - fjira                   # fjira is a fuzzy-find terminal UI for Jira (complements acli)
   - fzf                     # fzf is a command-line fuzzy finder
   - git                     # Git is a version control system
   - git-lfs                 # Git LFS is a Git extension for versioning large files
@@ -138,13 +138,6 @@ mac_dev_playbook_apt_repo_packages:
     # often filtered/unreliable) -- same fingerprint, resolved via Launchpad's
     # own API, just fetched over a transport that actually works.
     signed_by: "https://keyserver.ubuntu.com/pks/lookup?op=get&options=mr&search=0x0721FDF5FECB88DC6920361657C8EF455CEAE491"
-  - name: acli
-    description: "Atlassian CLI"
-    uris: https://acli.atlassian.com/linux/deb
-    suites: stable
-    components:
-      - main
-    signed_by: https://acli.atlassian.com/gpg/public-key.asc
   - name: claude-desktop
     description: "Claude desktop app"
     # https://support.claude.com/en/articles/10065433-install-claude-desktop
